@@ -1,0 +1,11 @@
+{
+  "message": "Task updated",
+  "task": {
+    "title": "Updated Title",
+    "description": null,
+    "status": null,
+    "deadline": null,
+    "createdAt": "2025-07-15T08:47:17.218567+00:00",
+    "id": "0UVEDZgBNcXS6CUlTvHo"
+  }
+}

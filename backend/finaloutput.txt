@@ -1,0 +1,42 @@
+Starting Task API Route Test with 1000 fake tasks
+
+ GET /
+Time: 0.0071s | Status: 200
+Response: Task Management API is running
+
+ Attempt 1 to create 1000 fake tasks
+
+ POST /tasks/fake/1000
+Time: 0.156s | Status: 200
+Response: Requested: 1000 | Successfully created: 1000
+Successfully created 1000 tasks.
+
+ GET /tasks (1st - Cold)
+Time: 3.7572s | Status: 200
+Response: ...
+
+ Expected: 1000, Found in DB: 95163
+
+ GET /tasks (2nd - Cached?)
+Time: 1.282s | Status: 200
+Response: ...
+
+ Cache test: Cold = 3.7572s, Cached = 1.282s, time difference = 2.4752s
+
+ POST /tasks
+Time: 0.2913s | Status: 200
+Response: Task created
+
+ PUT /tasks/qLoQ85cBr64bG5qg3-_w
+Time: 0.0644s | Status: 200
+Response: Task updated
+
+ DELETE /tasks/qLoQ85cBr64bG5qg3-_w
+Time: 0.0467s | Status: 200
+Response: Task with id 'qLoQ85cBr64bG5qg3-_w' deleted successfully.
+
+ DELETE /tasks/Cbvt85cBr64bG5qglHGx
+Time: 0.0457s | Status: 200
+Response: Task with id 'Cbvt85cBr64bG5qglHGx' deleted successfully.
+
+ Completed in 8.99 seconds
