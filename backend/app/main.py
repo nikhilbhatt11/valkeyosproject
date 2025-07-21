@@ -1,18 +1,13 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,Query
 from pydantic import BaseModel
 from datetime import datetime,timezone
-from opensearch_client import os_client
-from valkey_client import valkey_client
+from app.opensearch_client import os_client
+from app.valkey_client import valkey_client
 import time
 import json
 from fastapi.middleware.cors import CORSMiddleware
 from opensearchpy.helpers import bulk
-from fastapi import Query
-
-
-from fake_data import generate_fake_tasks
-
-
+from app.fake_data import generate_fake_tasks
 
 
 
@@ -36,12 +31,8 @@ class Task(BaseModel):
 
 @app.get("/")
 def read_root():
+    print("activating backend")
     return {"message": "Task Management API is running"}
-
-
-
-
-
 
 
 @app.post("/addtasks")
@@ -92,16 +83,9 @@ async def create_task(task: Task):
         raise HTTPException(status_code=500, detail="Failed to create task")
 
 
-
-
-
-
-
-
-
 @app.get("/alltasks")
 async def get_all_tasks(page: int = Query(1, ge=1), limit: int = Query(1000, ge=1, le=10000)):
-
+    print("first connection")
     cache_key = f"tasks:all:page:{page}:limit:{limit}"
 
     try:
@@ -149,23 +133,11 @@ async def get_all_tasks(page: int = Query(1, ge=1), limit: int = Query(1000, ge=
         raise HTTPException(status_code=500, detail="Something went wrong")
 
 
-
-
-
 class TaskUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     status: str | None = None
     deadline:str | None = None
-
-
-
-
-        
-
-
-
-
 
 
 
@@ -217,13 +189,6 @@ async def update_task(task_id: str, task_update: TaskUpdate):
     except Exception as e:
         print("Error in update_task:", e)
         raise HTTPException(status_code=500, detail="Failed to update task")
-
-
-
-
-
-
-
 
 
 @app.post("/tasks/fake/{count}")
@@ -311,28 +276,3 @@ async def delete_task(task_id: str):
         print("Error deleting task:", e)
         raise HTTPException(status_code=500, detail="Failed to delete task")
 
-
-
-
-
-#@app.delete("/deletetasks")
-# async def delete_all_tasks():
-#     try:
-        
-#         query = {
-#             "query": {
-#                 "match_all": {}
-#             }
-#         }
-#         os_response = os_client.delete_by_query(index="tasks", body=query)
-
-#         # Delete main cache and paginated caches from Valkey
-#         keys = valkey_client.keys("tasks:all*")
-#         if keys:
-#             valkey_client.delete(*keys)
-
-#         return {"message": "All tasks deleted", "opensearch_result": os_response}
-
-#     except Exception as e:
-#         print("Error deleting all tasks:", e)
-#         raise HTTPException(status_code=500, detail="Failed to delete all tasks")
